@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>রেজিস্ট্রেশন ফর্ম</title>
+  <style>
+    body {
+      font-family: 'Siyam Rupali', sans-serif;
+      background: url('https://i.imgur.com/rbq28ch.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+    }
+    .container {
+      max-width: 500px;
+      margin: 60px auto;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #ffdd57;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #ffdd57;
+      color: #000;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e6c94c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>রেজিস্ট্রেশন ফর্ম</h2>
+    <form id="regForm">
+      <label>ছাত্র/ছাত্রীর নাম :</label>
+      <input type="text" id="name" required>
+
+      <label>স্থায়ী ঠিকানা :</label>
+      <input type="text" id="address" required>
+
+      <label>SSC পাশের সাল :</label>
+      <select id="sscYear" required></select>
+
+      <label>অংশগ্রহণকারীর সংখ্যা:</label>
+      <select id="members" required>
+        <option value="">নির্বাচন করুন</option>
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+      </select>
+
+      <label>মোবাইল নাম্বার:</label>
+      <input type="text" id="phone" maxlength="11" pattern="\d{11}" required>
+
+      <button type="submit">সামর্পণ করুন</button>
+    </form>
+  </div>
+
+  <script>
+    const yearSelect = document.getElementById("sscYear");
+    for (let y = 1995; y <= 2025; y++) {
+      const option = document.createElement("option");
+      option.value = y;
+      option.text = y;
+      yearSelect.appendChild(option);
+    }
+
+    const form = document.getElementById("regForm");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      if (localStorage.getItem("registered") === "true") {
+        alert("আপনি ইতিমধ্যে রেজিস্ট্রেশন করেছেন।");
+        return;
+      }
+
+      const data = {
+        name: document.getElementById("name").value,
+        address: document.getElementById("address").value,
+        class: document.getElementById("sscYear").value,
+        members: document.getElementById("members").value,
+        phone: document.getElementById("phone").value
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbz6t2rOhw5cHgwOiSHfmGtK5jq7NaaforoU1KwJEEgvpmIHcs_ctJracFdYYnilQ-OvhQ/exec", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(res => res.text())
+      .then(res => {
+        alert("ধন্যবাদ! আপনার রেজিস্ট্রেশন সফল হয়েছে।");
+        localStorage.setItem("registered", "true");
+        form.reset();
+      })
+      .catch(err => alert("রেজিস্ট্রেশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"));
+    });
+  </script>
+</body>
+</html>
